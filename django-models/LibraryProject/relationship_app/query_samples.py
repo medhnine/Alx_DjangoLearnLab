@@ -50,15 +50,26 @@ def query_books_by_author():
     print("QUERY 1: Books by a specific author")
     print("=" * 50)
     
-    # Method 1: Using filter on Book model
+    # Method 1: Using filter on Book model with author object
+    try:
+        author = Author.objects.get(name="J.K. Rowling")
+        books = Book.objects.filter(author=author)
+        
+        print(f"Books by {author.name} (using Book.objects.filter(author=author)):")
+        for book in books:
+            print(f"  - {book.title}")
+    except Author.DoesNotExist:
+        print("Author 'J.K. Rowling' not found.")
+    
+    # Method 2: Using filter with author name lookup
     author_name = "J.K. Rowling"
     books = Book.objects.filter(author__name=author_name)
     
-    print(f"Books by {author_name} (using Book.objects.filter):")
+    print(f"\nBooks by {author_name} (using Book.objects.filter(author__name)):")
     for book in books:
         print(f"  - {book.title}")
     
-    # Method 2: Using reverse relationship from Author
+    # Method 3: Using reverse relationship from Author
     try:
         author = Author.objects.get(name=author_name)
         books_by_author = author.books.all()
