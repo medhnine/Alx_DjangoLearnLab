@@ -1,1 +1,1 @@
-intro django
+Hii, DjnagoProject
