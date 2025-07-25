@@ -14,7 +14,6 @@ from django.dispatch import receiver
 from .forms import BookForm
 
 # Create your views here.
-
 @login_required
 @permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book(request):
@@ -25,7 +24,6 @@ def add_book(request):
             return redirect()
     else:
         book_form = BookForm()
-
     return HttpResponse('add book')
 
 @login_required
@@ -52,7 +50,6 @@ def delete_book(request, pk):
     pass
     return HttpResponse('delete book')
 
-
 @login_required
 def list_books(request):
     books = Book.objects.all()
@@ -65,10 +62,23 @@ class ViewLibrary(DetailView):
     model = library
     template_name = 'relationship_app/library_detail.html'
 
-class UserCreationForm(CreateView):
-    form_class = UserCreationForm
+# FIXED: Renamed class to avoid conflict with imported UserCreationForm
+class RegisterView(CreateView):
+    form_class = UserCreationForm  # This uses the imported UserCreationForm
     success_url = reverse_lazy("login")
     template_name = "relationship_app/register.html"
+
+# Alternative function-based view (also works and explicitly shows UserCreationForm())
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'relationship_app/register.html', {'form': form})
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
