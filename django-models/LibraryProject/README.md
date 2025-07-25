@@ -1,1 +1,2 @@
-Hii, DjnagoProject
+# Library Project
+This is an alx task to practice django

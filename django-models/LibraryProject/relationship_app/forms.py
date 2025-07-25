@@ -1,10 +1,7 @@
 from django import forms
-from .models import Book
+from .models import UserProfile, Book
 
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['title', 'author', 'published_date']
-        widgets = {
-            'published_date': forms.DateInput(attrs={'type': 'date'}),
-        }
+        fields = ['title', 'author']
